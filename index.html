@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self'; img-src 'self' data:; connect-src 'self'">
+  <title>Course Engine — EdX Course Builder</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+  <div class="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-inner">
+        <div class="header-top">
+          <div class="logo">
+            <span class="logo-icon">🔨</span>
+            <h1 class="logo-text">Course Engine</h1>
+            <span class="logo-badge">EdX</span>
+          </div>
+          <a href="guide.html" class="btn btn-guide">
+            <span class="btn-icon">📖</span> User Guide
+          </a>
+        </div>
+        <p class="tagline">Build complete EdX courses from Excel spreadsheets</p>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+      <!-- Mode Tabs -->
+      <div class="mode-tabs">
+        <button id="tab-build" class="mode-tab active" data-mode="build">
+          <span class="tab-icon">🔨</span> Build Course
+        </button>
+        <button id="tab-import" class="mode-tab" data-mode="import">
+          <span class="tab-icon">📥</span> Import from EdX
+        </button>
+      </div>
+
+      <!-- ===== BUILD MODE ===== -->
+      <div id="build-mode">
+        <!-- Step 1: Upload -->
+        <section class="section upload-section">
+          <div class="section-header">
+            <span class="step-badge">1</span>
+            <h2>Upload Excel Workbook</h2>
+          </div>
+
+          <div class="upload-row">
+            <div id="drop-zone" class="drop-zone">
+              <div class="drop-zone-content">
+                <div class="drop-icon">📄</div>
+                <p class="drop-text">Drag & drop your <strong>.xlsx</strong> file here</p>
+                <p class="drop-subtext">or</p>
+                <button id="browse-btn" class="btn btn-secondary">Browse Files</button>
+                <input id="file-input" type="file" accept=".xlsx,.xls,.csv" hidden>
+              </div>
+            </div>
+
+            <div class="template-card">
+              <div class="template-icon">📋</div>
+              <h3>Need a template?</h3>
+              <p>Download our pre-filled Excel template with sample course data.</p>
+              <button id="template-btn" class="btn btn-outline">
+                <span class="btn-icon">⬇️</span> Download Template
+              </button>
+            </div>
+          </div>
+
+          <span id="file-name" class="file-name" style="display:none;"></span>
+        </section>
+
+        <!-- Errors -->
+        <section id="errors-section" class="section errors-section" style="display:none;">
+          <div class="section-header">
+            <span class="step-badge badge-error">⚠️</span>
+            <h2>Validation Errors</h2>
+          </div>
+          <ul id="errors-list" class="errors-list"></ul>
+        </section>
+
+        <!-- Stats -->
+        <div id="stats-section" class="stats-section" style="display:none;"></div>
+        <h2 id="course-title" class="course-title" style="display:none;"></h2>
+
+        <!-- Step 2: Preview -->
+        <section id="preview-section" class="section preview-section" style="display:none;">
+          <div class="section-header">
+            <span class="step-badge">2</span>
+            <h2>Course Preview</h2>
+          </div>
+          <div id="preview-content" class="preview-content"></div>
+        </section>
+
+        <!-- Step 3: Export -->
+        <button id="export-btn" class="btn btn-primary btn-export" disabled style="display:none;">
+          <span class="btn-icon">📦</span> Export .tar.gz for EdX
+        </button>
+      </div>
+
+      <!-- ===== IMPORT MODE ===== -->
+      <div id="import-mode" style="display:none;">
+        <section class="section upload-section">
+          <div class="section-header">
+            <span class="step-badge import-badge">1</span>
+            <h2>Upload EdX Course Export</h2>
+          </div>
+
+          <div id="import-drop-zone" class="drop-zone">
+            <div class="drop-zone-content">
+              <div class="drop-icon">📦</div>
+              <p class="drop-text">Drag & drop your <strong>.tar.gz</strong> course export here</p>
+              <p class="drop-subtext">or</p>
+              <button id="import-browse-btn" class="btn btn-secondary">Browse Files</button>
+              <input id="import-file-input" type="file" accept=".tar.gz,.gz,.tgz" hidden>
+            </div>
+          </div>
+
+          <span id="import-file-name" class="file-name" style="display:none;"></span>
+        </section>
+
+        <!-- Import Warnings -->
+        <section id="import-warnings-section" class="section warnings-section" style="display:none;">
+          <div class="section-header">
+            <span class="step-badge badge-warning">⚠️</span>
+            <h2>Import Warnings</h2>
+          </div>
+          <ul id="import-warnings-list" class="errors-list warnings-list"></ul>
+        </section>
+
+        <!-- Import Stats -->
+        <div id="import-stats-section" class="stats-section" style="display:none;"></div>
+        <h2 id="import-course-title" class="course-title" style="display:none;"></h2>
+
+        <!-- Import Preview -->
+        <section id="import-preview-section" class="section preview-section" style="display:none;">
+          <div class="section-header">
+            <span class="step-badge import-badge">2</span>
+            <h2>Imported Course Preview</h2>
+          </div>
+          <div id="import-preview-content" class="preview-content"></div>
+        </section>
+
+        <!-- Export to Excel -->
+        <button id="import-export-btn" class="btn btn-accent btn-export" disabled style="display:none;">
+          <span class="btn-icon">📊</span> Export to Excel (.xlsx)
+        </button>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>Course Engine — All processing happens in your browser. No data is uploaded to any server.</p>
+    </footer>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>

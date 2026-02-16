@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Guide — Course Engine</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        .guide-page {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 0 24px 60px;
+        }
+
+        .guide-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--color-text-muted);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 24px;
+            padding: 8px 16px;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            transition: all var(--transition);
+        }
+
+        .guide-back:hover {
+            color: var(--color-text);
+            border-color: var(--color-border-light);
+            background: var(--color-surface-hover);
+        }
+
+        .guide-page-title {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--color-primary-light), var(--color-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .guide-page-subtitle {
+            color: var(--color-text-muted);
+            font-size: 15px;
+            margin-bottom: 32px;
+        }
+
+        /* Tabs row */
+        .guide-nav {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 28px;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            padding: 4px;
+            overflow-x: auto;
+        }
+
+        .guide-nav-btn {
+            flex: 1;
+            padding: 10px 16px;
+            font-family: var(--font);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--color-text-muted);
+            background: transparent;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all var(--transition);
+        }
+
+        .guide-nav-btn:hover {
+            color: var(--color-text);
+            background: var(--color-surface-alt);
+        }
+
+        .guide-nav-btn.active {
+            color: white;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+            box-shadow: var(--shadow-glow);
+        }
+
+        /* Section panels */
+        .guide-section {
+            display: none;
+            animation: fadeIn 0.25s ease;
+        }
+
+        .guide-section.active {
+            display: block;
+        }
+
+        .guide-section h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--color-text);
+            margin-bottom: 16px;
+        }
+
+        .guide-section p {
+            font-size: 14px;
+            color: var(--color-text-muted);
+            line-height: 1.8;
+            margin-bottom: 16px;
+        }
+
+        .guide-section code {
+            background: var(--color-surface-alt);
+            color: var(--color-primary-light);
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+        }
+
+        /* Flow cards */
+        .flow-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .flow-card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            text-align: center;
+        }
+
+        .flow-card-accent {
+            border-color: rgba(0, 212, 170, 0.25);
+            background: rgba(0, 212, 170, 0.04);
+        }
+
+        .flow-card-icon {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .flow-card h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--color-text);
+            margin-bottom: 8px;
+        }
+
+        .flow-card p {
+            font-size: 13px;
+            margin-bottom: 0;
+        }
+
+        /* Info box */
+        .info-box {
+            background: var(--color-primary-glow);
+            border: 1px solid rgba(108, 99, 255, 0.2);
+            border-radius: var(--radius-sm);
+            padding: 14px 18px;
+            font-size: 13px;
+            color: var(--color-text-muted);
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .info-box strong {
+            color: var(--color-text);
+        }
+
+        /* Numbered steps */
+        .steps {
+            list-style: none;
+            counter-reset: step;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            padding: 0;
+            margin-bottom: 24px;
+        }
+
+        .steps li {
+            counter-increment: step;
+            position: relative;
+            padding-left: 48px;
+        }
+
+        .steps li::before {
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .steps li strong {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: 4px;
+        }
+
+        .steps li p {
+            font-size: 13px;
+            margin-bottom: 0;
+        }
+
+        /* Sheet cards */
+        .sheet-card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .sheet-card h3 {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--color-text);
+            margin-bottom: 8px;
+        }
+
+        .sheet-card p {
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        /* Tables */
+        .ref-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            margin-top: 8px;
+        }
+
+        .ref-table th {
+            text-align: left;
+            padding: 10px 14px;
+            background: var(--color-surface-alt);
+            color: var(--color-text-muted);
+            font-weight: 600;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .ref-table td {
+            padding: 10px 14px;
+            color: var(--color-text);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .ref-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .ref-table tr:hover td {
+            background: rgba(108, 99, 255, 0.03);
+        }
+
+        /* Tip cards */
+        .tip-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .tip-list li {
+            padding: 14px 18px;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            color: var(--color-text-muted);
+            line-height: 1.7;
+            transition: border-color var(--transition);
+        }
+
+        .tip-list li:hover {
+            border-color: var(--color-border-light);
+        }
+
+        .tip-list li strong {
+            color: var(--color-text);
+        }
+
+        @media (max-width: 600px) {
+            .flow-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .guide-nav {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-inner">
+                <div class="logo">
+                    <span class="logo-icon">🔨</span>
+                    <h1 class="logo-text">Course Engine</h1>
+                    <span class="logo-badge">EdX</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="guide-page">
+            <a href="index.html" class="guide-back">← Back to App</a>
+
+            <h1 class="guide-page-title">📖 User Guide</h1>
+            <p class="guide-page-subtitle">Everything you need to know about building and importing EdX courses.</p>
+
+            <!-- Tab bar -->
+            <nav class="guide-nav">
+                <button class="guide-nav-btn active" data-tab="overview">Overview</button>
+                <button class="guide-nav-btn" data-tab="build">🔨 Build Course</button>
+                <button class="guide-nav-btn" data-tab="structure">📝 Course Structure</button>
+                <button class="guide-nav-btn" data-tab="import">📥 Import from EdX</button>
+                <button class="guide-nav-btn" data-tab="excel">📊 Excel Format</button>
+                <button class="guide-nav-btn" data-tab="tips">💡 Tips & Best Practices</button>
+            </nav>
+
+            <!-- ===== OVERVIEW ===== -->
+            <div class="guide-section active" data-tab="overview">
+                <h2>What is Course Engine?</h2>
+                <p>Course Engine lets you create and manage EdX courses using <strong>Excel spreadsheets</strong> — no
+                    coding or XML editing required. It supports two workflows:</p>
+
+                <div class="flow-cards">
+                    <div class="flow-card">
+                        <div class="flow-card-icon">🔨</div>
+                        <h3>Build Mode</h3>
+                        <p>Create a new EdX course from an Excel workbook. Upload your <code>.xlsx</code> file, preview
+                            the course structure, and export a <code>.tar.gz</code> archive ready to import into EdX
+                            Studio.</p>
+                    </div>
+                    <div class="flow-card flow-card-accent">
+                        <div class="flow-card-icon">📥</div>
+                        <h3>Import Mode</h3>
+                        <p>Convert an existing EdX course export back into Excel format. Upload a <code>.tar.gz</code>
+                            from EdX Studio, and download a fully formatted <code>.xlsx</code> workbook for editing.</p>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <strong>🔒 Privacy:</strong> All processing happens entirely in your browser. No data is ever
+                    uploaded to any server. Your course content stays on your computer.
+                </div>
+            </div>
+
+            <!-- ===== BUILD ===== -->
+            <div class="guide-section" data-tab="build">
+                <h2>Building a Course from Excel</h2>
+                <ol class="steps">
+                    <li>
+                        <strong>Prepare your Excel workbook</strong>
+                        <p>Use the <em>Download Template</em> button on the home screen to get a pre-filled workbook.
+                            The workbook must contain 6 sheets: <code>Course Info</code>, <code>Structure</code>,
+                            <code>Text Blocks</code>, <code>Videos</code>, <code>Problems</code>, and
+                            <code>Open Response</code>.
+                        </p>
+                    </li>
+                    <li>
+                        <strong>Upload the workbook</strong>
+                        <p>Drag and drop your <code>.xlsx</code> file onto the upload zone, or click <em>Browse
+                                Files</em>. The parser will validate all sheets and flag any errors or missing
+                            references.</p>
+                    </li>
+                    <li>
+                        <strong>Preview your course</strong>
+                        <p>Review the full course structure tree. It shows all chapters, subsections, units, and content
+                            blocks. Stats at the top show total counts of each type.</p>
+                    </li>
+                    <li>
+                        <strong>Export for EdX</strong>
+                        <p>Click <em>Export .tar.gz for EdX</em> to download the OLX archive. In EdX Studio, go to
+                            <strong>Tools → Import</strong> and upload this file to create your course.
+                        </p>
+                    </li>
+                </ol>
+            </div>
+
+            <!-- ===== COURSE STRUCTURE ===== -->
+            <div class="guide-section" data-tab="structure">
+                <h2>Building Course Structure</h2>
+                <p>The <strong>Structure</strong> sheet is the backbone of your course. It defines the hierarchy:
+                    <strong>Sections → Subsections → Units → Content blocks</strong>. Here's how to build a course
+                    structure step by step.
+                </p>
+
+                <div class="info-box">
+                    <strong>💡 EdX terminology:</strong> In EdX, a <em>Section</em> is called a <code>chapter</code>, a
+                    <em>Subsection</em> is called a <code>sequential</code>, and a <em>Unit</em> is called a
+                    <code>vertical</code>. The Structure sheet uses these EdX column names.
+                </div>
+
+                <h3 style="font-size:17px; font-weight:700; color:var(--color-text); margin: 24px 0 16px;">Step 1: Add a
+                    New Section</h3>
+                <p>A section (chapter) is the top-level grouping in your course. To create one, add rows to the
+                    <code>Structure</code> sheet with the same value in the <code>chapter</code> column.
+                </p>
+                <p>For example, to create a section called <strong>"Module 3: Assessment"</strong>, every row that
+                    belongs to this section should have <code>Module 3: Assessment</code> in the <code>chapter</code>
+                    column.</p>
+
+                <h3 style="font-size:17px; font-weight:700; color:var(--color-text); margin: 24px 0 16px;">Step 2: Add
+                    Subsections to the Section</h3>
+                <p>Within a section, subsections (sequentials) group related units together. Fill in the
+                    <code>sequential</code> column to create subsections under your section.
+                </p>
+                <p>For example, under <strong>"Module 3: Assessment"</strong> you might have two subsections:
+                    <code>3.1 Knowledge Check</code> and <code>3.2 Final Quiz</code>.
+                </p>
+
+                <h3 style="font-size:17px; font-weight:700; color:var(--color-text); margin: 24px 0 16px;">Step 3: Add
+                    Units and Content Blocks</h3>
+                <p>Each row in the Structure sheet represents one content block inside a unit. The <code>vertical</code>
+                    column is the unit name, <code>block_type</code> tells the system what kind of content it is, and
+                    <code>block_id</code> links to the matching row in the content sheet (e.g., Problems, Text Blocks).
+                </p>
+
+                <h3 style="font-size:17px; font-weight:700; color:var(--color-text); margin: 24px 0 16px;">Step 4:
+                    Choose a Block ID</h3>
+                <p>The <code>block_id</code> is a <strong>label you create yourself</strong> — you can use any value you
+                    want. It's simply a unique identifier that links a row in the Structure sheet to its matching
+                    content row in another sheet (e.g., Problems or Text Blocks).</p>
+
+                <div class="info-box">
+                    <strong>📌 Block ID rules:</strong><br>
+                    • <strong>You make it up</strong> — there's no auto-generated ID. Just type a short, descriptive
+                    name.<br>
+                    • <strong>Must be unique</strong> — no two blocks in the entire workbook can share the same
+                    <code>block_id</code>.<br>
+                    • <strong>Must match</strong> — the <code>block_id</code> in the Structure sheet must exactly match
+                    the <code>block_id</code> in the corresponding content sheet.<br>
+                    • <strong>Use letters, numbers, and underscores</strong> — avoid spaces and special characters.<br>
+                    • <strong>Be descriptive</strong> — use a naming pattern that helps you identify the block later.
+                </div>
+
+                <div class="sheet-card">
+                    <h3>✅ Good block_id examples</h3>
+                    <table class="ref-table">
+                        <thead>
+                            <tr>
+                                <th>block_id</th>
+                                <th>Why it's good</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>ch1_welcome_text</code></td>
+                                <td>Chapter 1, welcome text block — clear and descriptive</td>
+                            </tr>
+                            <tr>
+                                <td><code>mod2_quiz_q1</code></td>
+                                <td>Module 2, quiz, question 1 — includes context and numbering</td>
+                            </tr>
+                            <tr>
+                                <td><code>intro_video</code></td>
+                                <td>Simple and self-explanatory for a single intro video</td>
+                            </tr>
+                            <tr>
+                                <td><code>final_essay</code></td>
+                                <td>Clearly identifies the final essay open-response block</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 style="font-size:17px; font-weight:700; color:var(--color-text); margin: 24px 0 16px;">Step 5:
+                    Define the Content</h3>
+                <p>For each <code>block_id</code> referenced in the Structure sheet, you must have a corresponding row
+                    in the appropriate content sheet. For problems, add a row to the <strong>Problems</strong> sheet
+                    with the same <code>block_id</code>. For text, add a row to <strong>Text Blocks</strong>, and so on.
+                </p>
+
+                <h3 style="font-size:17px; font-weight:700; color:var(--color-text); margin: 24px 0 16px;">📋 Full
+                    Example</h3>
+                <p>Here's a complete example. Notice how the <code>block_id</code> values are simply descriptive labels
+                    we chose — <code>mod3_intro</code>, <code>mod3_q1</code>, etc. — and the same IDs appear in both the
+                    Structure sheet and the Problems sheet:</p>
+
+                <div class="sheet-card">
+                    <h3>🗂️ Structure Sheet — New Rows</h3>
+                    <table class="ref-table">
+                        <thead>
+                            <tr>
+                                <th>chapter</th>
+                                <th>sequential</th>
+                                <th>vertical</th>
+                                <th>block_type</th>
+                                <th>block_id</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Module 3: Assessment</td>
+                                <td>3.1 Knowledge Check</td>
+                                <td>Unit: Quiz Intro</td>
+                                <td>text</td>
+                                <td><strong>mod3_intro</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Module 3: Assessment</td>
+                                <td>3.1 Knowledge Check</td>
+                                <td>Unit: Question 1</td>
+                                <td>problem</td>
+                                <td><strong>mod3_q1</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Module 3: Assessment</td>
+                                <td>3.1 Knowledge Check</td>
+                                <td>Unit: Question 2</td>
+                                <td>problem</td>
+                                <td><strong>mod3_q2</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Module 3: Assessment</td>
+                                <td>3.2 Final Quiz</td>
+                                <td>Unit: Final Q1</td>
+                                <td>problem</td>
+                                <td><strong>mod3_final_q1</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="sheet-card" style="margin-top: 16px;">
+                    <h3>❓ Problems Sheet — Matching Rows</h3>
+                    <table class="ref-table">
+                        <thead>
+                            <tr>
+                                <th>block_id</th>
+                                <th>title</th>
+                                <th>question_text</th>
+                                <th>choice_a</th>
+                                <th>choice_b</th>
+                                <th>correct</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>mod3_q1</strong></td>
+                                <td>Question 1</td>
+                                <td>What is 2 + 2?</td>
+                                <td>3</td>
+                                <td>4</td>
+                                <td>B</td>
+                            </tr>
+                            <tr>
+                                <td><strong>mod3_q2</strong></td>
+                                <td>Question 2</td>
+                                <td>What color is the sky?</td>
+                                <td>Blue</td>
+                                <td>Green</td>
+                                <td>A</td>
+                            </tr>
+                            <tr>
+                                <td><strong>mod3_final_q1</strong></td>
+                                <td>Final Question</td>
+                                <td>Select the prime number.</td>
+                                <td>4</td>
+                                <td>7</td>
+                                <td>B</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-box" style="margin-top: 20px;">
+                    <strong>Key rules:</strong><br>
+                    • Every <code>block_id</code> in the Structure sheet must have a matching row in the corresponding
+                    content sheet<br>
+                    • Rows with the same <code>chapter</code> value are grouped into the same section<br>
+                    • Rows with the same <code>sequential</code> value (within a chapter) form a subsection<br>
+                    • You can mix block types within the same subsection — e.g. a text intro followed by problems<br>
+                    • Multiple content blocks can share the same <code>vertical</code> (unit) to appear on the same page
+                </div>
+            </div>
+
+            <!-- ===== IMPORT ===== -->
+            <div class="guide-section" data-tab="import">
+                <h2>Importing from EdX Studio</h2>
+                <ol class="steps">
+                    <li>
+                        <strong>Export from EdX Studio</strong>
+                        <p>In EdX Studio, go to <strong>Tools → Export</strong> and download the <code>.tar.gz</code>
+                            course archive to your computer.</p>
+                    </li>
+                    <li>
+                        <strong>Upload the archive</strong>
+                        <p>Switch to the <em>Import from EdX</em> tab on the home screen and drag your
+                            <code>.tar.gz</code> file onto the upload zone.
+                        </p>
+                    </li>
+                    <li>
+                        <strong>Review the import</strong>
+                        <p>Course Engine will parse all OLX XML files and display a preview of the course structure.
+                            Check the stats and structure to make sure everything looks correct.</p>
+                    </li>
+                    <li>
+                        <strong>Download as Excel</strong>
+                        <p>Click <em>Export to Excel (.xlsx)</em> to download the course as a formatted spreadsheet. You
+                            can edit it and re-export back to EdX using Build Mode.</p>
+                    </li>
+                </ol>
+
+                <div class="info-box">
+                    <strong>Note:</strong> Some special EdX block types — such as library content, discussion forums,
+                    and LTI integrations — are skipped during import because they don't contain editable content in the
+                    export archive.
+                </div>
+            </div>
+
+            <!-- ===== EXCEL FORMAT ===== -->
+            <div class="guide-section" data-tab="excel">
+                <h2>Excel Workbook Format</h2>
+                <p>Your workbook must contain these 6 sheets. Use the <em>Download Template</em> button to get a working
+                    example with sample data.</p>
+
+                <div class="sheet-card">
+                    <h3>📋 Sheet 1: Course Info</h3>
+                    <p>Two-column key-value pairs for course metadata:</p>
+                    <table class="ref-table">
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Description</th>
+                                <th>Example</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Course Name</td>
+                                <td>Display title of the course</td>
+                                <td>Intro to Physics</td>
+                            </tr>
+                            <tr>
+                                <td>Organization</td>
+                                <td>Your organization identifier</td>
+                                <td>MITx</td>
+                            </tr>
+                            <tr>
+                                <td>Course ID</td>
+                                <td>Unique course code</td>
+                                <td>PHY101</td>
+                            </tr>
+                            <tr>
+                                <td>Run</td>
+                                <td>Term or run identifier</td>
+                                <td>2024_Spring</td>
+                            </tr>
+                            <tr>
+                                <td>Language</td>
+                                <td>ISO language code</td>
+                                <td>en</td>
+                            </tr>
+                            <tr>
+                                <td>Start Date</td>
+                                <td>Course start date</td>
+                                <td>2024-01-15</td>
+                            </tr>
+                            <tr>
+                                <td>End Date</td>
+                                <td>Course end date</td>
+                                <td>2024-06-30</td>
+                            </tr>
+                            <tr>
+                                <td>Self-Paced</td>
+                                <td>Yes or No</td>
+                                <td>Yes</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="sheet-card">
+                    <h3>🗂️ Sheet 2: Structure</h3>
+                    <p>Defines the course hierarchy. Each row maps a content block to its position in the course tree.
+                    </p>
+                    <table class="ref-table">
+                        <thead>
+                            <tr>
+                                <th>Column</th>
+                                <th>Description</th>
+                                <th>Example</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>chapter</code></td>
+                                <td>Chapter (section) name</td>
+                                <td>Chapter 1: Introduction</td>
+                            </tr>
+                            <tr>
+                                <td><code>sequential</code></td>
+                                <td>Subsection name</td>
+                                <td>1.1 Welcome</td>
+                            </tr>
+                            <tr>
+                                <td><code>vertical</code></td>
+                                <td>Unit name</td>
+                                <td>Unit 1.1.1 Overview</td>
+                            </tr>
+                            <tr>
+                                <td><code>block_type</code></td>
+                                <td>One of: <code>text</code>, <code>video</code>, <code>problem</code>,
+                                    <code>openresponse</code>
+                                </td>
+                                <td>text</td>
+                            </tr>
+                            <tr>
+                                <td><code>block_id</code></td>
+                                <td>Unique ID matching a row in the content sheet</td>
+                                <td>welcome_text</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="sheet-card">
+                    <h3>📝 Sheet 3: Text Blocks</h3>
+                    <p>HTML content blocks for reading material, instructions, and other rich text.</p>
+                    <table class="ref-table">
+                        <thead>
+                            <tr>
+                                <th>Column</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>block_id</code></td>
+                                <td>Unique identifier (must match Structure sheet)</td>
+                            </tr>
+                            <tr>
+                                <td><code>title</code></td>
+                                <td>Display name</td>
+                            </tr>
+                            <tr>
+                                <td><code>content</code></td>
+                                <td>Full HTML content</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="sheet-card">
+                    <h3>🎥 Sheet 4: Videos</h3>
+                    <p>Video embeds from YouTube or HTML5 sources.</p>
+                    <table class="ref-table">
+                        <thead>
+                            <tr>
+                                <th>Column</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>block_id</code></td>
+                                <td>Unique identifier</td>
+                            </tr>
+                            <tr>
+                                <td><code>title</code></td>
+                                <td>Display name</td>
+                            </tr>
+                            <tr>
+                                <td><code>youtube_id</code></td>
+                                <td>YouTube video ID (e.g. <code>dQw4w9WgXcQ</code>)</td>
+                            </tr>
+                            <tr>
+                                <td><code>html5_url</code></td>
+                                <td>Direct URL to MP4 (optional)</td>
+                            </tr>
+                            <tr>
+                                <td><code>start_time</code></td>
+                                <td>Clip start (e.g. <code>00:01:30</code>)</td>
+                            </tr>
+                            <tr>
+                                <td><code>end_time</code></td>
+                                <td>Clip end (e.g. <code>00:05:00</code>)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="sheet-card">
+                    <h3>❓ Sheet 5: Problems</h3>
+                    <p>Multiple-choice questions with choices, hints, and explanations.</p>
+                    <table class="ref-table">
+                        <thead>
+                            <tr>
+                                <th>Column</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>block_id</code></td>
+                                <td>Unique identifier</td>
+                            </tr>
+                            <tr>
+                                <td><code>title</code></td>
+                                <td>Display name</td>
+                            </tr>
+                            <tr>
+                                <td><code>question_text</code></td>
+                                <td>The question prompt</td>
+                            </tr>
+                            <tr>
+                                <td><code>choice_a</code> – <code>choice_d</code></td>
+                                <td>Four answer choices</td>
+                            </tr>
+                            <tr>
+                                <td><code>correct</code></td>
+                                <td>Correct answer letter: <code>A</code>, <code>B</code>, <code>C</code>, or
+                                    <code>D</code>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><code>hint_a</code> – <code>hint_d</code></td>
+                                <td>Per-choice feedback hints</td>
+                            </tr>
+                            <tr>
+                                <td><code>explanation</code></td>
+                                <td>Solution explanation shown after answering</td>
+                            </tr>
+                            <tr>
+                                <td><code>show_answer</code></td>
+                                <td>When to reveal: <code>attempted</code>, <code>always</code>, <code>never</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="sheet-card">
+                    <h3>✍️ Sheet 6: Open Response</h3>
+                    <p>Open-ended assessment blocks with rubric criteria.</p>
+                    <table class="ref-table">
+                        <thead>
+                            <tr>
+                                <th>Column</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>block_id</code></td>
+                                <td>Unique identifier</td>
+                            </tr>
+                            <tr>
+                                <td><code>title</code></td>
+                                <td>Display name</td>
+                            </tr>
+                            <tr>
+                                <td><code>prompt</code></td>
+                                <td>The assignment prompt</td>
+                            </tr>
+                            <tr>
+                                <td><code>criterion_N_name</code></td>
+                                <td>Rubric criterion name (N = 1, 2, …)</td>
+                            </tr>
+                            <tr>
+                                <td><code>criterion_N_options</code></td>
+                                <td>Options as <code>Label=Points;Label=Points;…</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>assessment_type</code></td>
+                                <td><code>self</code>, <code>peer</code>, or <code>staff</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ===== TIPS ===== -->
+            <div class="guide-section" data-tab="tips">
+                <h2>Tips &amp; Best Practices</h2>
+                <ul class="tip-list">
+                    <li><strong>Start with the template:</strong> Download the template from the home screen — it
+                        contains sample data showing the correct format for every sheet and block type.</li>
+                    <li><strong>Block IDs must be unique:</strong> Each <code>block_id</code> should be unique across
+                        the entire workbook. Use descriptive names like <code>ch1_welcome_text</code> or
+                        <code>quiz_q1</code>.
+                    </li>
+                    <li><strong>HTML content:</strong> Text block content supports full HTML including headings,
+                        paragraphs, lists, images, tables, and inline styles.</li>
+                    <li><strong>Round-trip editing:</strong> Export from EdX → import to Excel → edit the spreadsheet →
+                        re-export back to EdX. This is a powerful way to bulk-edit course content.</li>
+                    <li><strong>Validation feedback:</strong> The parser checks for missing block IDs, duplicate IDs,
+                        and broken references between the Structure sheet and content sheets. Fix all errors before
+                        exporting.</li>
+                    <li><strong>YouTube video IDs:</strong> Use just the YouTube video ID (e.g.
+                        <code>dQw4w9WgXcQ</code>), not the full URL. The ID is the part after <code>v=</code> in the
+                        YouTube URL.
+                    </li>
+                    <li><strong>Problem answer format:</strong> Set the <code>correct</code> column to the letter of the
+                        correct choice (<code>A</code>, <code>B</code>, <code>C</code>, or <code>D</code>). Only
+                        single-answer problems are supported.</li>
+                    <li><strong>Self-paced courses:</strong> Setting <em>Self-Paced</em> to "Yes" in Course Info enables
+                        learners to progress at their own pace without fixed deadlines.</li>
+                </ul>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>EdX Manifest — All processing happens in your browser. No data is uploaded to any server.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Tab switching
+        document.querySelectorAll('.guide-nav-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tab = btn.dataset.tab;
+                document.querySelectorAll('.guide-nav-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+                document.querySelectorAll('.guide-section').forEach(s => s.classList.toggle('active', s.dataset.tab === tab));
+            });
+        });
+    </script>
+</body>
+
+</html>
