@@ -12,7 +12,13 @@ A secure, offline-first desktop application for creating and managing EdX/Open e
 - **Secure & Private** — Runs entirely on your local machine. No course data is ever uploaded to a server.
 - **Instant Preview** — Visualize your course structure before exporting.
 
-## User Guide
+## Supported Operating Systems
+
+- **macOS 10.15+** (Catalina and later)
+- Supports both **Apple Silicon** (M1/M2/M3) and **Intel** processors.
+
+> Note: Windows and Linux are supported by the underlying technology (Electron), but build configurations for these platforms are not currently included.
+
 
 The application includes a comprehensive built-in **User Guide**, accessible by clicking the **📖 User Guide** button in the top-right corner.
 
