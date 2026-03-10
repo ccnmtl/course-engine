@@ -209,7 +209,15 @@ function parseProblemBlock(files, blockId, data, warnings) {
 
     // Parse question text from <label> tag
     const labelMatch = xmlFile.match(/<label>([\s\S]*?)<\/label>/);
-    const questionText = labelMatch ? stripTags(labelMatch[1]).trim() : '';
+    let questionText = labelMatch ? stripTags(labelMatch[1]).trim() : '';
+
+    if (!questionText) {
+        // Fallback: look for text before <choicegroup> or <checkboxgroup>
+        const preGroupMatch = xmlFile.match(/<(?:choiceresponse|multiplechoiceresponse)>([\s\S]*?)<(?:choicegroup|checkboxgroup)/);
+        if (preGroupMatch) {
+            questionText = stripTags(preGroupMatch[1]).trim();
+        }
+    }
 
     // Parse choices
     const choices = [];
@@ -220,7 +228,7 @@ function parseProblemBlock(files, blockId, data, warnings) {
         const choiceContent = match[2];
 
         // Extract hint if present
-        const hintMatch = choiceContent.match(/<choicehint>([\s\S]*?)<\/choicehint>/);
+        const hintMatch = choiceContent.match(/<choicehint[^>]*>([\s\S]*?)<\/choicehint>/);
         const hint = hintMatch ? stripTags(hintMatch[1]).trim() : '';
 
         // Extract choice text (everything before the hint tag)
@@ -237,13 +245,16 @@ function parseProblemBlock(files, blockId, data, warnings) {
     const solMatch = xmlFile.match(/<solution>([\s\S]*?)<\/solution>/);
     const explanation = solMatch ? stripTags(solMatch[1]).replace(/Explanation\s*/i, '').trim() : '';
 
+    const isMultiSelect = xmlFile.includes('<checkboxgroup');
+
     data.problemBlocks.set(blockId, {
         blockId,
         title,
         questionText,
         choices,
         explanation,
-        showAnswer: attrs.showanswer || 'attempted'
+        showAnswer: attrs.showanswer || 'attempted',
+        isMultiSelect
     });
 }
 

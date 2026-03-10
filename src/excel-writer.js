@@ -91,6 +91,7 @@ export async function courseDataToExcel(courseData) {
     const probCols = [
         { header: 'block_id', key: 'blockId', width: 35 },
         { header: 'title', key: 'title', width: 15 },
+        { header: 'problem_type', key: 'problemType', width: 15 },
         { header: 'question_text', key: 'questionText', width: 50 },
         { header: 'choice_a', key: 'choice_a', width: 20 },
         { header: 'choice_b', key: 'choice_b', width: 20 },
@@ -111,9 +112,14 @@ export async function courseDataToExcel(courseData) {
     ws5.columns = probCols;
 
     for (const [id, block] of courseData.problemBlocks) {
+        // Fallback to correct answers count if isMultiSelect isn't explicitly defined
+        const correctCount = block.choices.filter(c => c.correct).length;
+        const isMultiSelect = block.isMultiSelect !== undefined ? block.isMultiSelect : (correctCount > 1);
+
         const row = {
             blockId: block.blockId,
             title: block.title,
+            problemType: isMultiSelect ? 'multi-select' : 'single-select',
             questionText: block.questionText,
             explanation: block.explanation,
             showAnswer: block.showAnswer

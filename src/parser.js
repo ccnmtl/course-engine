@@ -148,13 +148,23 @@ export async function parseWorkbook(buffer) {
                 return;
             }
 
+            const problemType = objStr(r, 'problem_type');
+            let isMultiSelect;
+            if (problemType) {
+                isMultiSelect = problemType.toLowerCase() === 'multi-select';
+            } else {
+                // Fallback for older excel files: infer from correct answers count
+                isMultiSelect = Array.from(correctSet).length > 1;
+            }
+
             data.problemBlocks.set(blockId, {
                 blockId,
                 title: objStr(r, 'title') || blockId,
                 questionText: objStr(r, 'question_text'),
                 choices,
                 explanation: objStr(r, 'explanation'),
-                showAnswer: objStr(r, 'show_answer') || 'attempted'
+                showAnswer: objStr(r, 'show_answer') || 'attempted',
+                isMultiSelect
             });
         });
     }
